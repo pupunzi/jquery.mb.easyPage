@@ -22,13 +22,33 @@
     author:"Matteo Bicocchi",
     version:"0.1",
     defaults:{
-      references:"a[rel='easyPage']", // or "a" for all links -- links must be samedomain
+      references:"a[rel='easyPage']", //or "a" for all links -- links must be samedomain
+      pages:[],
+      mainContext:"body",
+      targetContext:".wrapper",
       effect:"Hscroll", //or Vscroll, fade, slide
-      nextBtn:$("<div/>").addClass("mbNext").html("NEXT"),
-      prevBtn:$("<div/>").addClass("mbPrev").html("PREV")
+      showHistoryControls:false,
+      historyControls:[$("<div/>").addClass("mbNext").html("NEXT") , $("<div/>").addClass("mbPrev").html("PREV")]
     },
-    domain: document.domain,
-    pages:[],
+    defaultEffects:[
+      {name:"Hscroll", behavior:function(op,np){
+        op.addClass("moving").animate({left:windowDim().w, opacity:0},3000,"easeOutExpo",function(){});
+        np.css({left:-windowDim().w,opacity:0}).animate({left:0, opacity:1},1000,"easeOutExpo",function(){});
+      }},
+      {name:"Vscroll", behavior:function(op,np){
+        op.addClass("moving").animate({top:windowDim().h, opacity:0},3000,"easeOutExpo",function(){});
+        np.css({top:-windowDim().h,opacity:0}).animate({top:0, opacity:1},1000,"easeOutExpo",function(){});
+      }},
+      {name:"zigZag", behavior:function(op,np){
+        op.addClass("moving").animate({left:windowDim().w, opacity:0},3000,"easeOutExpo",function(){});
+        np.css({top:-windowDim().h,opacity:0}).animate({top:0, opacity:1},1000,"easeOutExpo",function(){});
+      }},
+      {name:"fade", behavior:function(op,np){
+        op.addClass("moving").animate({left:0, opacity:0},1000,"easeOutExpo",function(){});
+        np.css({opacity:0}).animate({top:0, opacity:1},1000,"easeOutExpo",function(){});
+      }}
+    ],
+    domain: window.location.protocol+"//"+document.domain,
     history:[],
 
     init:function(options){
@@ -36,53 +56,35 @@
       var opt=$.mbEasyPages.defaults;
       $.mbEasyPages.historyCounter=0;
       var globalWrapper=$("<div/>").attr("id","globalWrapper").css({position:"absolute", top:0, left:0, overflow:"hidden", width:"100%", height:"100%"});
-      var wrapper= $("<div/>").addClass("mbPagesWrapper").css({position:"absolute", top:0, left:0, width:"100%", height:"100%"});
+      var wrapper= $("<div/>").addClass("mbPagesWrapper").css({position:"absolute", width:"100%", height:"100%", overflow:"auto"});
       globalWrapper.append(wrapper);
-      $("body").wrapInner(globalWrapper);
-      $("body").append(opt.nextBtn).append(opt.prevBtn);
-      opt.nextBtn.bind("click",function(){$.mbEasyPages.nextPage()});
-      opt.prevBtn.bind("click",function(){$.mbEasyPages.prevPage()});
-      $("body").initLinks();
-    },
+      $(opt.mainContext).wrapInner(globalWrapper);
+      if(opt.showHistoryControls){
+        $(opt.mainContext).append(opt.historyControls[0]).append(opt.historyControls[1]);
+        opt.historyControls[0].bind("click",function(){$.mbEasyPages.nextPage()});
+        opt.historyControls[1].bind("click",function(){$.mbEasyPages.prevPage()});
+      }
+      $(opt.mainContext).initLinks();
 
+      $.mbEasyPages.manageHistoryBtns($.mbEasyPages.historyCounter);
+      $.history.init(pageLoad);
+    },
+    addEffect:function(eff){
+      $.mbEasyPages.defaultEffects.push(eff);
+    },
     nextPage:function(){
       $.mbEasyPages.historyCounter++;
       var c=$.mbEasyPages.historyCounter;
       if($.mbEasyPages.history[c]){
-        //        $.mbEasyPages.loadPage($.mbEasyPages.history[c], false);
         $.history.load($.mbEasyPages.history[c]);
       }
     },
-
     prevPage:function(){
       $.mbEasyPages.historyCounter--;
       var c=$.mbEasyPages.historyCounter;
       if($.mbEasyPages.history[c]){
-        //        $.mbEasyPages.loadPage($.mbEasyPages.history[c], false);
         $.history.load($.mbEasyPages.history[c]);
       }
-    },
-
-    manageHistoryBtns:function(c){
-      $.mbEasyPages.defaults.nextBtn.show();
-      $.mbEasyPages.defaults.prevBtn.show();
-
-      if(!$.mbEasyPages.history[c+1])
-        $.mbEasyPages.defaults.nextBtn.hide();
-
-      if(!$.mbEasyPages.history[c-1])
-        $.mbEasyPages.defaults.prevBtn.hide();
-    },
-
-    loadPage:function(url,store){
-      $.mbEasyPages.manageHistoryBtns($.mbEasyPages.historyCounter);
-      var wrapper= $("<div/>").addClass("mbPagesWrapper").css({position:"absolute", top:0, left:0, width:"100%", height:"100%"});
-      $("#globalWrapper").prepend(wrapper);
-      wrapper.load(url,function(){
-        wrapper.initLinks();
-        var oldPage=$(".mbPagesWrapper").eq(1);
-        oldPage.addClass("moving").animate({left:1400, opacity:0},1000,"easeOutExpo",function(){oldPage.remove();});
-      });
     },
     initLinks:function(opt){
       var pageLinks= $(this).find($.mbEasyPages.defaults.references);
@@ -98,12 +100,62 @@
           });
         }
       })
+    },    
+    manageHistoryBtns:function(c){
+      $.mbEasyPages.defaults.historyControls[0].show();
+      $.mbEasyPages.defaults.historyControls[1].show();
+
+      if(!$.mbEasyPages.history[c+1])
+        $.mbEasyPages.defaults.historyControls[0].hide();
+
+      if(!$.mbEasyPages.history[c-1])
+        $.mbEasyPages.defaults.historyControls[1].hide();
+    },
+    loadPage:function(url,store){
+      if($.mbEasyPages.defaults.showHistoryControls) $.mbEasyPages.manageHistoryBtns($.mbEasyPages.historyCounter);
+      var op=$(".mbPagesWrapper").eq(1);
+      op.remove();
+      var wrapper= $("<div/>").addClass("mbPagesWrapper").css({position:"absolute", width:"100%", height:"100%", overflow:"auto"});
+      $("#globalWrapper").prepend(wrapper);
+      var u= url + ($.mbEasyPages.defaults.targetContext? " "+$.mbEasyPages.defaults.targetContext:"");
+      wrapper.load(u,function(){
+        wrapper.initLinks();
+        var newPage=$(".mbPagesWrapper").eq(0);
+        var oldPage=$(".mbPagesWrapper").eq(1);
+        $.mbEasyPages.makeTransition(oldPage,newPage);
+      });
+    },
+    makeTransition:function(op,np){
+      var name= $.mbEasyPages.defaults.effect;
+      $.each($.mbEasyPages.defaultEffects,function(){
+        if(this.name == name)
+          this.behavior(op,np);
+      });
     }
   };
 
   $.fn.initLinks=$.mbEasyPages.initLinks;
 
 })(jQuery);
+
+function pageLoad(hash) {
+  if(hash) {
+    $.mbEasyPages.loadPage(hash,true)
+  }else{
+    self.location.href= self.location.href.split("#")[0];
+  }
+}
+
+function windowDim() {
+  var context=$.mbEasyPages.defaults.mainContext;
+  if($.mbEasyPages.defaults.mainContext=="body") context=window;
+  var ww= $(context).width();
+  var wh= $(context).height();
+  var dim={};
+  dim.w = ww;
+  dim.h = wh;
+  return dim;
+}
 
 // string tools
 
@@ -125,18 +177,3 @@ String.prototype.endsWith = function(t, i) {
 String.prototype.asId = function () {
   return this.replace(/[^a-zA-Z0-9_]+/g, '');
 };
-
-
-function pageLoad(hash) {
-  if(hash) {
-    $.mbEasyPages.loadPage(hash,true)
-  }else{
-    self.location.href= self.location.href.split("#")[0];
-  }
-}
-
-$(function(){
-  $.mbEasyPages.init();
-  $.history.init(pageLoad);
-  $.mbEasyPages.manageHistoryBtns($.mbEasyPages.historyCounter);
-});

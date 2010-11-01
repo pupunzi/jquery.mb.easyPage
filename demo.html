@@ -29,15 +29,16 @@
       padding-top:90px;
       padding-left:50px;
       width:80%;
-      height:400px;
+      min-height:500px;
       margin:auto
     }
 
     .moving {
       background:white;
-      /*opacity:.9;*/
+      white-space:nowrap;
+    /*opacity:.9;*/
       -moz-box-shadow:#999 -3px 3px 10px;
-      box-shadow:#999 3px -3px 10px;
+      -webkit-box-shadow:#999 3px -3px 10px;
     }
     .mbNext {
       position:absolute;
@@ -89,6 +90,34 @@
   <script type="text/javascript" src="inc/jquery.easing.1.3.js"></script>
   <script type="text/javascript" src="inc/jquery.history.js"></script>
   <script type="text/javascript" src="inc/jquery.mb.easyPages.js"></script>
+  <script type="text/javascript">
+    $(function(){
+
+      // HOW TO ADD A CUSTOM TRANSITION EFFECT
+      $.mbEasyPages.addEffect({
+        name:"myEffect",
+        behavior:function(oldPage,newPage){
+          oldPage.addClass("moving").animate({height:10},2000,"easeOutExpo");
+          newPage.css({height:0,opacity:0}).animate({height:windowDim().h, opacity:1},1000,"easeOutExpo");
+        }
+      });
+
+      $.mbEasyPages.addEffect({
+        name:"myEffect_1",
+        behavior:function(oldPage,newPage){
+          oldPage.css({whiteSpace:"nowrap",right:0}).addClass("moving").animate({right:windowDim().w},2000,"easeOutExpo");
+          newPage.css({height:0, bottom:0,whiteSpace:"nowrap"}).animate({height:windowDim().h},1000,"easeOutExpo");
+        }
+      });
+      //----------------------------------------
+
+      $.mbEasyPages.init({
+        mainContext:"body",
+        effect:"myEffect",
+        targetContext:false
+      });
+    });
+  </script>
 
 </head>
 <body>
@@ -96,7 +125,9 @@
 <div class="wrapper">
   <h1>mb.easyPages.demo</h1>
 
-  <a rel="easyPage" href="pages/page_1.html">pagina 1</a>
+  <a rel="easyPage" href="pages/page_1.html">pagina 1</a><br>
+  <a rel="easyPage" href="pages/page_2.html">pagina 2</a><br>
+  <a rel="easyPage" href="pages/page_3.html">pagina 3</a><br>
 </div>
 
 </body>
