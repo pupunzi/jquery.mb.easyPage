@@ -23,6 +23,7 @@
     version:"0.1",
     defaults:{
       references:"a[rel='easyPage']", //or "a" for all links -- links must be samedomain
+      baseURL:"",
       pages:[],
       mainContext:"body",
       targetContext:".wrapper",
@@ -65,6 +66,8 @@
         opt.historyControls[1].bind("click",function(){$.mbEasyPages.prevPage()});
       }
       $(opt.mainContext).initLinks();
+      var baseURL=$("<base>").attr({href:opt.baseURL, id:"mbBaseURL"});
+      $("head").append(baseURL);
 
       $.mbEasyPages.manageHistoryBtns($.mbEasyPages.historyCounter);
       $.history.init(pageLoad);
