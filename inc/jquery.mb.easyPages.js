@@ -114,9 +114,10 @@
       if(!$.mbEasyPages.history[c-1])
         $.mbEasyPages.defaults.historyControls[1].hide();
     },
-    loadPage:function(url,store){
+    loadPage:function(url){
       if($.mbEasyPages.defaults.showHistoryControls) $.mbEasyPages.manageHistoryBtns($.mbEasyPages.historyCounter);
       var op=$(".mbPagesWrapper").eq(1);
+        console.debug(op.attr("class"))
       op.remove();
       var wrapper= $("<div/>").addClass("mbPagesWrapper").css({position:"absolute", width:"100%", height:"100%", overflow:"auto"});
       $("#globalWrapper").prepend(wrapper);

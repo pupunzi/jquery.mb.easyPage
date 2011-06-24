@@ -13,121 +13,140 @@
 
 <html>
 <head>
+    <!-- iPhone Stuff -->
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=1;" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
 
-  <style type="text/css">
-    body{
-      font-family:Arial, Helvetica, sans-serif;
-      margin:10px;
-    }
-    .mbPagesWrapper{
-      background:#f3f3f3;
-    }
-
-    .wrapper{
-      position:relative;
-      font-family:Arial, Helvetica, sans-serif;
-      padding-top:90px;
-      padding-left:50px;
-      width:80%;
-      min-height:500px;
-      margin:auto
-    }
-
-    .moving {
-      background:white;
-      white-space:nowrap;
-    /*opacity:.9;*/
-      -moz-box-shadow:#999 -3px 3px 10px;
-      -webkit-box-shadow:#999 3px -3px 10px;
-    }
-    .mbNext {
-      position:absolute;
-      top:0;
-      cursor:pointer;
-    }
-    .mbPrev {
-      position:absolute;
-      top:0;
-      right:0;
-      cursor:pointer;
-    }
-    .wrapper .text{
-      font-family:Arial, Helvetica, sans-serif;
-      padding-top:50px;
-    }
-    .wrapper h1{
-      font-family:Arial, Helvetica, sans-serif;
-      font-size:26px;
-    }
-    .longText{
-      margin-top:20px;
-      width:600px;
-      font:18px/24px Arial, Helvetica, sans-serif;
-      color:gray;
-    }
-    span.btn{
-      padding:10px;
-      display:inline-block;
-      cursor:pointer;
-      font:12px/14px Arial, Helvetica, sans-serif;
-      color:#aaa;
-      background-color:#eee;
-      -moz-border-radius:10px;
-      -webkit-border-radius:10px;
-      -moz-box-shadow:#999 2px 0px 3px;
-      -webkit-box-shadow:#999 2px 0px 3px;
-    }
-    span.btn:hover{
-      background-color:#000;
-    }
-
-  </style>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>mb.easyPages</title>
-  <link href="css/mb.easyPages.css" media="all" rel="stylesheet" type="text/css">
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
-  <script type="text/javascript" src="inc/jquery.metadata.js"></script>
-  <script type="text/javascript" src="inc/jquery.easing.1.3.js"></script>
-  <script type="text/javascript" src="inc/jquery.history.js"></script>
-  <script type="text/javascript" src="inc/jquery.mb.easyPages.js"></script>
-  <script type="text/javascript">
-    $(function(){
-
-      // HOW TO ADD A CUSTOM TRANSITION EFFECT
-      $.mbEasyPages.addEffect({
-        name:"myEffect",
-        behavior:function(oldPage,newPage){
-          oldPage.addClass("moving").animate({height:10},2000,"easeOutExpo");
-          newPage.css({height:0,opacity:0}).animate({height:windowDim().h, opacity:1},1000,"easeOutExpo");
+    <style type="text/css">
+        body{
+            font-family:Arial, Helvetica, sans-serif;
         }
-      });
-
-      $.mbEasyPages.addEffect({
-        name:"myEffect_1",
-        behavior:function(oldPage,newPage){
-          oldPage.css({whiteSpace:"nowrap",right:0}).addClass("moving").animate({right:windowDim().w},2000,"easeOutExpo");
-          newPage.css({height:0, bottom:0,whiteSpace:"nowrap"}).animate({height:windowDim().h},1000,"easeOutExpo");
+        .mbPagesWrapper{
+            background:#f3f3f3;
         }
-      });
-      //----------------------------------------
 
-      $.mbEasyPages.init({
-        mainContext:"body",
-        effect:"myEffect",
-        targetContext:false
-      });
-    });
-  </script>
+        .wrapper{
+            position:relative;
+            font-family:Arial, Helvetica, sans-serif;
+            padding-left:50px;
+            min-height:500px;
+        }
+
+        .moving {
+            background:white;
+            white-space:nowrap;
+            -moz-box-shadow:#999 -3px 3px 10px;
+            -webkit-box-shadow:#999 3px -3px 10px;
+        }
+        .mbNext {
+            position:absolute;
+            top:0;
+            cursor:pointer;
+        }
+        .mbPrev {
+            position:absolute;
+            top:0;
+            right:0;
+            cursor:pointer;
+        }
+        .wrapper .text{
+            font-family:Arial, Helvetica, sans-serif;
+            padding-top:50px;
+        }
+        .wrapper img{
+            width:50%!important;
+        }
+        .wrapper h1{
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:26px;
+        }
+        .longText{
+            margin-top:20px;
+            width:600px;
+            font:18px/24px Arial, Helvetica, sans-serif;
+            color:gray;
+        }
+        span.btn{
+            padding:10px;
+            display:inline-block;
+            cursor:pointer;
+            font:12px/14px Arial, Helvetica, sans-serif;
+            color:#aaa;
+            background-color:#eee;
+            -moz-border-radius:10px;
+            -webkit-border-radius:10px;
+            -moz-box-shadow:#999 2px 0px 3px;
+            -webkit-box-shadow:#999 2px 0px 3px;
+        }
+        span.btn:hover{
+            background-color:#000;
+        }
+
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>mb.easyPages</title>
+    <link href="css/transitions.css" media="all" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+    <script type="text/javascript" src="inc/jquery.animateWithCss.js"></script>
+    <script type="text/javascript" src="inc/jquery.easing.1.3.js"></script>
+    <script type="text/javascript" src="inc/jquery.history.js"></script>
+    <script type="text/javascript" src="inc/jquery.mb.easyPages.js"></script>
+    <script type="text/javascript">
+        $(function(){
+
+            // HOW TO ADD A CUSTOM TRANSITION EFFECT
+            $.mbEasyPages.addEffect({
+                name:"myEffect",
+                behavior:function(oldPage,newPage){
+                    newPage.css({height:0,opacity:0}).animate({height:windowDim().h, opacity:1},1000,"easeOutExpo");
+                    oldPage.addClass("moving").animate({height:10},2000,"easeOutExpo");
+                }
+            });
+
+            $.mbEasyPages.addEffect({
+                name:"myEffect_0",
+                behavior:function(oldPage,newPage){
+                    oldPage.css({zIndex:1,top:0});
+                    newPage.css({zIndex:1000,top:0, height:0}).addClass("moving").animate({height:windowDim().h},1000,"easeOutExpo");
+                }
+            });
+
+            $.mbEasyPages.addEffect({
+                name:"cssEffect",
+                behavior:function(oldPage,newPage){
+                    oldPage.css({zIndex:0});
+                    newPage.css({"left":windowDim().w, zIndex:1}).addClass("moving");
+                    newPage.animateWithCss({left:0},1000,function(){oldPage.remove()})
+                }
+            });
+
+            $.mbEasyPages.addEffect({
+                name:"cssEffect_1",
+                behavior:function(oldPage,newPage){
+                    oldPage.addClass("slideLeftOut").bind('webkitAnimationEnd', function(){});
+                    newPage.addClass("slideLeftIn").bind('webkitAnimationEnd', function(){});
+                }
+            });
+
+            //----------------------------------------
+
+            $.mbEasyPages.init({
+                mainContext:"body",
+                effect:"cssEffect_1",
+                targetContext:false
+            });
+        });
+    </script>
 
 </head>
 <body>
 
 <div class="wrapper">
-  <h1>mb.easyPages.demo</h1>
+    <h1>mb.easyPages.demo</h1>
 
-  <a rel="easyPage" href="pages/page_1.html">pagina 1</a><br>
-  <a rel="easyPage" href="pages/page_2.html">pagina 2</a><br>
-  <a rel="easyPage" href="pages/page_3.html">pagina 3</a><br>
+    <a rel="easyPage" href="pages/page_1.html">pagina 1</a><br>
+    <a rel="easyPage" href="pages/page_2.html">pagina 2</a><br>
+    <a rel="easyPage" href="pages/page_3.html">pagina 3</a><br>
 </div>
 
 </body>
