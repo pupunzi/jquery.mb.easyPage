@@ -1,6 +1,6 @@
 /*******************************************************************************
  jquery.mb.components
- Copyright (c) 2001-2010. Matteo Bicocchi (Pupunzi); Open lab srl, Firenze - Italy
+ Copyright (c) 2001-2011. Matteo Bicocchi (Pupunzi); Open lab srl, Firenze - Italy
  email: mbicocchi@open-lab.com
  site: http://pupunzi.com
 
@@ -117,7 +117,6 @@
     loadPage:function(url){
       if($.mbEasyPages.defaults.showHistoryControls) $.mbEasyPages.manageHistoryBtns($.mbEasyPages.historyCounter);
       var op=$(".mbPagesWrapper").eq(1);
-        console.debug(op.attr("class"))
       op.remove();
       var wrapper= $("<div/>").addClass("mbPagesWrapper").css({position:"absolute", width:"100%", height:"100%", overflow:"auto"});
       $("#globalWrapper").prepend(wrapper);
